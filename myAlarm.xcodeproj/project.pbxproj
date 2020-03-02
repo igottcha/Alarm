@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		9E608E0A240DB5A4005090AA /* Alarm.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E608E09240DB5A4005090AA /* Alarm.swift */; };
+		9E94B622240DCFA500D2D4B0 /* AlarmController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E94B621240DCFA500D2D4B0 /* AlarmController.swift */; };
 		F7C2038C2131AD3400C3FC77 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7C2038B2131AD3400C3FC77 /* AppDelegate.swift */; };
 		F7C203912131AD3400C3FC77 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F7C2038F2131AD3400C3FC77 /* Main.storyboard */; };
 		F7C203932131AD3400C3FC77 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F7C203922131AD3400C3FC77 /* Assets.xcassets */; };
@@ -16,6 +17,7 @@
 
 /* Begin PBXFileReference section */
 		9E608E09240DB5A4005090AA /* Alarm.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Alarm.swift; path = myAlarm/Alarm.swift; sourceTree = SOURCE_ROOT; };
+		9E94B621240DCFA500D2D4B0 /* AlarmController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AlarmController.swift; path = myAlarm/AlarmController.swift; sourceTree = SOURCE_ROOT; };
 		F7C203882131AD3400C3FC77 /* myAlarm.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = myAlarm.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F7C2038B2131AD3400C3FC77 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		F7C203902131AD3400C3FC77 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -73,6 +75,7 @@
 		F7C203A82131B1DB00C3FC77 /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				9E94B621240DCFA500D2D4B0 /* AlarmController.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -169,6 +172,7 @@
 			files = (
 				F7C2038C2131AD3400C3FC77 /* AppDelegate.swift in Sources */,
 				9E608E0A240DB5A4005090AA /* Alarm.swift in Sources */,
+				9E94B622240DCFA500D2D4B0 /* AlarmController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
