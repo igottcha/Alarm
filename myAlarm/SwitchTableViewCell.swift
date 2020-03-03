@@ -33,6 +33,7 @@ class SwitchTableViewCell: UITableViewCell {
     //MARK: - Actions
     
     @IBAction func switchValueChanged(_ sender: UISwitch) {
+        delegate?.alarmSwitchTapped(for: self)
     }
     
     //MARK: - Lifecycle

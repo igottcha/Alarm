@@ -23,7 +23,7 @@ class AlarmsListTableViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: "alarmCell", for: indexPath) as? SwitchTableViewCell else {return UITableViewCell()}
         let alarm = AlarmController.shared.alarms[indexPath.row]
-        cell.updateViews(alarm: alarm)
+        cell.updateViews(with: alarm)
         cell.delegate = self
         return cell
     }
@@ -35,7 +35,7 @@ class AlarmsListTableViewController: UITableViewController {
             tableView.deleteRows(at: [indexPath], with: .fade)
         } else if editingStyle == .insert {
             // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-        }    
+        }
     }
     
     // MARK: - Navigation
@@ -52,6 +52,6 @@ extension AlarmsListTableViewController: SwitchTableViewCellDelegate {
         guard let index = tableView.indexPath(for: cell) else {return}
             let alarm = AlarmController.shared.alarms[index.row]
         
-        cell.updateViews(alarm: alarm)
+        cell.updateViews(with: alarm)
     }
 }
