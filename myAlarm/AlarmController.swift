@@ -24,7 +24,7 @@ class AlarmController {
         
     init() {
         self.alarms = self.mockAlarms
-        loadToPersistence()
+        loadFromPersistentStorage()
     }
     
     static func toggleEnabled(for alarm: Alarm) {
@@ -36,25 +36,25 @@ class AlarmController {
     func addAlarm(fireDate: Date, name: String, enabled: Bool) {
         let alarm = Alarm(fireDate: fireDate, name: name, enabled: enabled)
         alarms.append(alarm)
-        saveToPersistence()
+        saveToPersistentStorage()
     }
     
     func updateAlarm(alarm: Alarm, fireDate: Date, name: String, enabled: Bool) {
         alarm.fireDate = fireDate
         alarm.name = name
         alarm.enabled = enabled
-        saveToPersistence()
+        saveToPersistentStorage()
     }
     
     func deleteAlarm(alarm: Alarm) {
         guard let index = alarms.firstIndex(of: alarm) else {return}
         alarms.remove(at: index)
-        saveToPersistence()
+        saveToPersistentStorage()
     }
     
     //MARK: - Persistence
     
-    func fileURL() -> URL {
+    private static func fileURL() -> URL {
         let path = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
         let documentDirectory = path[0]
         let fileName = "myAlarms.json"
@@ -62,24 +62,25 @@ class AlarmController {
         return fullURL
     }
     
-    func saveToPersistence() {
+   private func saveToPersistentStorage() {
         let encoder = JSONEncoder()
         do {
             let data = try encoder.encode(alarms)
-            try data.write(to: fileURL())
+            try data.write(to: AlarmController.fileURL())
         } catch let error {
             print("\(error.localizedDescription) -> \(error)")
         }
     }
     
-    func loadToPersistence() {
+   func loadFromPersistentStorage() -> [Alarm] {
         let decoder = JSONDecoder()
         do {
-            let data = try Data.init(contentsOf: fileURL())
+            let data = try Data.init(contentsOf: AlarmController.fileURL())
             let alarms = try decoder.decode([Alarm].self, from: data)
             self.alarms = alarms
         } catch let error {
         print("\(error.localizedDescription) -> \(error)")
         }
+    return alarms
     }
 }
