@@ -31,27 +31,28 @@ class AlarmsListTableViewController: UITableViewController {
     // Override to support editing the table view.
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
-            // Delete the row from the data source
+            let alarm = AlarmController.shared.alarms[indexPath.row]
+            AlarmController.shared.deleteAlarm(alarm: alarm)
             tableView.deleteRows(at: [indexPath], with: .fade)
-        } else if editingStyle == .insert {
-            // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-        }
+        } 
     }
     
     // MARK: - Navigation
 
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
+        if segue.identifier == "showAlarmDetail" {
+            guard let indexPath = tableView.indexPathForSelectedRow, let destinationVC = segue.destination as? AlarmDetailTableViewController else {return}
+            let alarm = AlarmController.shared.alarms[indexPath.row]
+            destinationVC.alarm = alarm
+        }
     }
 }
 
 extension AlarmsListTableViewController: SwitchTableViewCellDelegate {
-    func alarmSwitchTapped(for cell: SwitchTableViewCell) {
+    func switchCellSwitchValueChanged(for cell: SwitchTableViewCell) {
         guard let index = tableView.indexPath(for: cell) else {return}
-            let alarm = AlarmController.shared.alarms[index.row]
-        
+        let alarm = AlarmController.shared.alarms[index.row]
+        AlarmController.toggleEnabled(for: alarm)
         cell.updateViews(with: alarm)
     }
 }

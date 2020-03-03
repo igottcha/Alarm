@@ -27,13 +27,16 @@ class AlarmController {
         loadToPersistence()
     }
     
+    static func toggleEnabled(for alarm: Alarm) {
+        alarm.enabled = !alarm.enabled
+    }
+    
     //MARK: - CRUD functions
     
-    func addAlarm(fireDate: Date, name: String, enabled: Bool) -> Alarm {
+    func addAlarm(fireDate: Date, name: String, enabled: Bool) {
         let alarm = Alarm(fireDate: fireDate, name: name, enabled: enabled)
         alarms.append(alarm)
         saveToPersistence()
-        return alarm
     }
     
     func updateAlarm(alarm: Alarm, fireDate: Date, name: String, enabled: Bool) {

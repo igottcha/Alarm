@@ -9,7 +9,7 @@
 import UIKit
 
 protocol SwitchTableViewCellDelegate: class {
-    func alarmSwitchTapped(for cell: SwitchTableViewCell)
+    func switchCellSwitchValueChanged(for cell: SwitchTableViewCell)
 }
 
 class SwitchTableViewCell: UITableViewCell {
@@ -24,8 +24,8 @@ class SwitchTableViewCell: UITableViewCell {
     
     var alarm: Alarm? {
         didSet {
-//            guard alarm != nil else {return}
-            updateViews(with: alarm!)
+            guard let alarm = alarm else {return}
+            updateViews(with: alarm)
         }
     }
     weak var delegate: SwitchTableViewCellDelegate?
@@ -33,14 +33,14 @@ class SwitchTableViewCell: UITableViewCell {
     //MARK: - Actions
     
     @IBAction func switchValueChanged(_ sender: UISwitch) {
-        delegate?.alarmSwitchTapped(for: self)
+        delegate?.switchCellSwitchValueChanged(for: self)
     }
     
     //MARK: - Lifecycle
    
     //MARK: - Helper Functions
     
-    func updateViews(with alarm: Alarm){
+    func updateViews(with alarm: Alarm) {
         nameLabel.text = alarm.name
         timeLabel.text = alarm.fireTimeAsString
         alarmSwitch.isOn = alarm.enabled
