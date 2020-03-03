@@ -13,6 +13,11 @@ class AlarmsListTableViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
     }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        tableView.reloadData()
+    }
 
     // MARK: - Table view data source
 
@@ -52,7 +57,7 @@ extension AlarmsListTableViewController: SwitchTableViewCellDelegate {
     func switchCellSwitchValueChanged(for cell: SwitchTableViewCell) {
         guard let index = tableView.indexPath(for: cell) else {return}
         let alarm = AlarmController.shared.alarms[index.row]
-        AlarmController.toggleEnabled(for: alarm)
+        AlarmController.shared.toggleEnabled(for: alarm)
         cell.updateViews(with: alarm)
     }
 }

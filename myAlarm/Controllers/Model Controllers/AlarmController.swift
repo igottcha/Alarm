@@ -6,9 +6,28 @@
 //  Copyright © 2020 trevorAdcock. All rights reserved.
 //
 
-import Foundation
+import UIKit
 
-class AlarmController {
+protocol AlarmScheduler: class {
+}
+
+extension AlarmScheduler {
+    func scheduleUserNotifications(for alarm: Alarm) {
+        let content = UNMutableNotificationContent()
+        content.title = NSString.localizedUserNotificationString(forKey: alarm.name, arguments: nil)
+        content.body = NSString.localizedUserNotificationString(forKey: "Your \(alarm.name) alarm set for \(alarm.fireTimeAsString) has gone off!", arguments: nil)
+        content.sound = UNNotificationSound.default
+        let comps = Calendar.current.dateComponents([.hour, .minute], from: alarm.fireDate)
+        let trigger = UNCalendarNotificationTrigger(dateMatching: comps, repeats: true)
+        let request = UNNotificationRequest(identifier: alarm.uuid, content: content, trigger: trigger)
+        UNUserNotificationCenter.current().add(request, withCompletionHandler: nil)
+    }
+    
+    func cancelUserNotifications(for alarm: Alarm) {
+        UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: [alarm.uuid])
+    }
+}
+class AlarmController: AlarmScheduler {
     
     static let shared = AlarmController()
     
@@ -18,17 +37,22 @@ class AlarmController {
         let alarm1 = Alarm(fireDate: Date(), name: "Wake up", enabled: true)
         let alarm2 = Alarm(fireDate: Date(), name: "Bedtime", enabled: true)
         let alarm3 = Alarm(fireDate: Date(), name: "Call Mom", enabled: true)
-    
-    return [alarm1, alarm2, alarm3]
-    } ()
         
+        return [alarm1, alarm2, alarm3]
+    } ()
+    
     init() {
         self.alarms = self.mockAlarms
         loadFromPersistentStorage()
     }
     
-    static func toggleEnabled(for alarm: Alarm) {
+    func toggleEnabled(for alarm: Alarm) {
         alarm.enabled = !alarm.enabled
+        if alarm.enabled {
+            scheduleUserNotifications(for: alarm)
+        } else {
+            cancelUserNotifications(for: alarm)
+        }
     }
     
     //MARK: - CRUD functions
@@ -49,6 +73,7 @@ class AlarmController {
     func deleteAlarm(alarm: Alarm) {
         guard let index = alarms.firstIndex(of: alarm) else {return}
         alarms.remove(at: index)
+        cancelUserNotifications(for: alarm)
         saveToPersistentStorage()
     }
     
@@ -62,7 +87,7 @@ class AlarmController {
         return fullURL
     }
     
-   private func saveToPersistentStorage() {
+    private func saveToPersistentStorage() {
         let encoder = JSONEncoder()
         do {
             let data = try encoder.encode(alarms)
@@ -72,15 +97,15 @@ class AlarmController {
         }
     }
     
-   func loadFromPersistentStorage() -> [Alarm] {
+    func loadFromPersistentStorage() -> [Alarm] {
         let decoder = JSONDecoder()
         do {
             let data = try Data.init(contentsOf: AlarmController.fileURL())
             let alarms = try decoder.decode([Alarm].self, from: data)
             self.alarms = alarms
         } catch let error {
-        print("\(error.localizedDescription) -> \(error)")
+            print("\(error.localizedDescription) -> \(error)")
         }
-    return alarms
+        return alarms
     }
 }

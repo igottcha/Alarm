@@ -16,15 +16,17 @@ class AlarmDetailTableViewController: UITableViewController {
     @IBOutlet weak var nameLabel: UITextField!
     @IBOutlet weak var enableButton: UIButton!
     
+    
     //MARK: - Properties
     
+    var alarmIsOn: Bool = true
     var alarm: Alarm? {
         didSet {
+            alarmIsOn = alarm?.enabled ?? true
             loadViewIfNeeded()
             updateViews()
         }
     }
-    var alarmIsOn: Bool = true
     
     //MARK: - Lifecyle
     
@@ -32,19 +34,25 @@ class AlarmDetailTableViewController: UITableViewController {
         super.viewDidLoad()
         updateViews()
     }
+//    override func viewWillAppear(_ animated: Bool) {
+//        super .viewWillAppear(animated)
+//        updateViews()
+//    }
     
     //MARK: - Actions
     
-    @IBAction func enableButtonTapped(_ sender: UIButton) {
+    @IBAction func enableButtonTapped(_ sender: Any) {
+        alarmIsOn = !alarmIsOn
+        updateViews()
     }
     
     @IBAction func saveButtonTapped(_ sender: UIBarButtonItem) {
-        guard let name = nameLabel.text, !name.isEmpty, let enabled = enableButton?.isEnabled else {return}
+        guard let name = nameLabel.text, !name.isEmpty else {return}
          let date = datePicker.date
         if let alarm = alarm {
-            AlarmController.shared.updateAlarm(alarm: alarm, fireDate: date, name: name, enabled: enabled)
+            AlarmController.shared.updateAlarm(alarm: alarm, fireDate: date, name: name, enabled: alarmIsOn)
         } else {
-            AlarmController.shared.addAlarm(fireDate: date, name: name, enabled: enabled)
+            AlarmController.shared.addAlarm(fireDate: date, name: name, enabled: alarmIsOn)
         }
         navigationController?.popViewController(animated: true)
     }
@@ -53,16 +61,16 @@ class AlarmDetailTableViewController: UITableViewController {
         guard let alarm = alarm else {return}
         datePicker.date = alarm.fireDate
         nameLabel.text = alarm.name
-        enableButton.isEnabled = alarm.enabled
-        if alarm.enabled {
-            enableButton.titleLabel?.text = "On"
-            enableButton.tintColor = .black
+        navigationItem.title = alarm.name
+        if alarmIsOn {
+            enableButton.setTitle("Turn Off", for: .normal)
+            enableButton.setTitleColor(.black, for: .normal)
             enableButton.backgroundColor = .green
-        } else {
-        enableButton.titleLabel?.text = "Off"
-            enableButton.tintColor = .white
+            } else {
+            enableButton.setTitle("Turn On", for: .normal)
+            enableButton.setTitleColor(.white, for: .normal)
             enableButton.backgroundColor = .red
-    }
+        }
     }
 
     // MARK: - Table view data source
