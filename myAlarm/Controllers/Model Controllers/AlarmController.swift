@@ -9,6 +9,8 @@
 import UIKit
 
 protocol AlarmScheduler: class {
+    func scheduleUserNotifications(for alarm: Alarm)
+    func cancelUserNotifications(for alarm: Alarm)
 }
 
 extension AlarmScheduler {
@@ -60,6 +62,7 @@ class AlarmController: AlarmScheduler {
     func addAlarm(fireDate: Date, name: String, enabled: Bool) {
         let alarm = Alarm(fireDate: fireDate, name: name, enabled: enabled)
         alarms.append(alarm)
+        scheduleUserNotifications(for: alarm)
         saveToPersistentStorage()
     }
     
@@ -67,6 +70,11 @@ class AlarmController: AlarmScheduler {
         alarm.fireDate = fireDate
         alarm.name = name
         alarm.enabled = enabled
+        if alarm.enabled {
+            scheduleUserNotifications(for: alarm)
+        } else {
+            cancelUserNotifications(for: alarm)
+        }
         saveToPersistentStorage()
     }
     
